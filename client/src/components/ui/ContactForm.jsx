@@ -44,7 +44,8 @@ export default function ContactForm() {
         setStatus('sending');
 
         try {
-            const res = await fetch('http://localhost:5000/contact', {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+            const res = await fetch(`${apiUrl}/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -140,8 +141,8 @@ export default function ContactForm() {
                                     key={goal}
                                     onClick={() => toggleGoal(goal)}
                                     className={`px-6 py-3 rounded-full border transition-all duration-300 text-sm md:text-base ${selectedGoals.includes(goal)
-                                            ? 'bg-white text-black border-white'
-                                            : 'border-white/20 text-gray-400 hover:border-white/50'
+                                        ? 'bg-white text-black border-white'
+                                        : 'border-white/20 text-gray-400 hover:border-white/50'
                                         }`}
                                 >
                                     {goal}

@@ -7,8 +7,9 @@ export default function WorkGrid() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Fetch from Cypress Backend
-        fetch('http://localhost:5000/projects')
+        // Fetch from Backend
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        fetch(`${apiUrl}/projects`)
             .then(res => res.json())
             .then(data => {
                 setProjects(data);
