@@ -8,7 +8,7 @@ export default function WorkGrid() {
 
     useEffect(() => {
         // Fetch from Backend
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const apiUrl = '';
         fetch(`${apiUrl}/projects`)
             .then(res => res.json())
             .then(data => {
