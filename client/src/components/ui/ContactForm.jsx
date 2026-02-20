@@ -44,7 +44,7 @@ export default function ContactForm() {
         setStatus('sending');
 
         try {
-            const apiUrl = '';
+            const apiUrl = '/api';
             const res = await fetch(`${apiUrl}/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

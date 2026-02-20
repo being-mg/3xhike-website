@@ -1,8 +1,13 @@
 'use client';
 import { motion } from 'framer-motion';
 
-const brands = [
-    "GOOGLE", "AMAZON", "NIKE", "APPLE", "SAMSUNG", "TESLA", "SONY", "SPOTIFY", "ADIDAS", "MICROSOFT"
+const logos = [
+    { name: "Logo 1", src: "/logos/logo1.png" },
+    { name: "Logo 2", src: "/logos/logo2.png" },
+    { name: "Logo 3", src: "/logos/logo3.png" },
+    { name: "Logo 4", src: "/logos/logo4.png" },
+    { name: "Logo 5", src: "/logos/logo5.png" },
+    { name: "Logo 6", src: "/logos/logo6.png" },
 ];
 
 export default function TrustedBy() {
@@ -15,10 +20,14 @@ export default function TrustedBy() {
                     transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
                     className="flex gap-16 md:gap-32 items-center pr-16 md:pr-32"
                 >
-                    {[...brands, ...brands].map((brand, i) => (
-                        <span key={i} className="text-2xl md:text-4xl font-bold text-white/20 uppercase tracking-tighter">
-                            {brand}
-                        </span>
+                    {[...logos, ...logos].map((logo, i) => (
+                        <div key={`logo-1-${i}`} className="flex items-center justify-center shrink-0 w-32 md:w-48 h-16 md:h-24 relative">
+                            <img
+                                src={logo.src}
+                                alt={logo.name}
+                                className="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity"
+                            />
+                        </div>
                     ))}
                 </motion.div>
                 <motion.div
@@ -27,10 +36,14 @@ export default function TrustedBy() {
                     transition={{ repeat: Infinity, ease: "linear", duration: 20 }}
                     className="flex gap-16 md:gap-32 items-center pr-16 md:pr-32"
                 >
-                    {[...brands, ...brands].map((brand, i) => (
-                        <span key={i} className="text-2xl md:text-4xl font-bold text-white/20 uppercase tracking-tighter">
-                            {brand}
-                        </span>
+                    {[...logos, ...logos].map((logo, i) => (
+                        <div key={`logo-2-${i}`} className="flex items-center justify-center shrink-0 w-32 md:w-48 h-16 md:h-24 relative">
+                            <img
+                                src={logo.src}
+                                alt={logo.name}
+                                className="object-contain w-full h-full opacity-70 hover:opacity-100 transition-opacity"
+                            />
+                        </div>
                     ))}
                 </motion.div>
             </div>
