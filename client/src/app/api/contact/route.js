@@ -8,6 +8,7 @@ export async function POST(req) {
 
         console.log('Received Contact Form Submission:', { name, company, phone, budget, goals });
 
+        // 1. Send Email Notification
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -27,20 +28,61 @@ export async function POST(req) {
               Company: ${company}
               Phone: ${phone}
               Budget: ${budget}
-              Goals: ${goals ? goals.join(', ') : ''}
+              Goals: ${goals ? (Array.isArray(goals) ? goals.join(', ') : goals) : ''}
           `
         };
 
+        let emailSent = false;
         if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-            await transporter.sendMail(mailOptions);
-            console.log('Email sent successfully');
+            try {
+                await transporter.sendMail(mailOptions);
+                console.log('Email sent successfully');
+                emailSent = true;
+            } catch (err) {
+                console.error('Email send error:', err);
+            }
         } else {
-            console.log('Skipping email send (No credentials configured). Data logged to console.');
+            console.log('Skipping email send (No credentials configured).');
         }
 
-        return NextResponse.json({ message: 'Inquiry received successfully' }, { status: 200 });
+        // 2. Send to Google Sheets (via Apps Script Web App)
+        let sheetSent = false;
+        const sheetUrl = process.env.GOOGLE_SHEET_WEBAPP_URL;
+        if (sheetUrl) {
+            try {
+                const sheetRes = await fetch(sheetUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        timestamp: new Date().toISOString(),
+                        name,
+                        company,
+                        phone,
+                        budget,
+                        goals: Array.isArray(goals) ? goals.join(', ') : goals
+                    })
+                });
+                if (sheetRes.ok) {
+                    console.log('Data sent to Google Sheets successfully');
+                    sheetSent = true;
+                } else {
+                    console.error('Google Sheets submission failed:', await sheetRes.text());
+                }
+            } catch (err) {
+                console.error('Google Sheets fetch error:', err);
+            }
+        } else {
+            console.log('Skipping Google Sheets submission (GOOGLE_SHEET_WEBAPP_URL not configured).');
+        }
+
+        return NextResponse.json({
+            message: 'Inquiry processed',
+            emailSent,
+            sheetSent
+        }, { status: 200 });
+
     } catch (error) {
-        console.error('Email send error:', error);
-        return NextResponse.json({ message: 'Failed to send inquiry' }, { status: 500 });
+        console.error('Request processing error:', error);
+        return NextResponse.json({ message: 'Failed to process inquiry' }, { status: 500 });
     }
 }
